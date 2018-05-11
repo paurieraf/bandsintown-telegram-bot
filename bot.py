@@ -3,6 +3,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from dotenv import load_dotenv
 import logging
 
+from app.bandsintown import BandsInTown
+
 load_dotenv()
 
 # Enable logging
@@ -13,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
+
+bands_in_town = BandsInTown();
 
 
 def start(bot, update):
@@ -27,7 +31,8 @@ def help(bot, update):
 
 def echo(bot, update):
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    update.message.reply_text(bands_in_town.fetch_artist('test'))
+    #update.message.reply_text(update.message.text)
 
 
 def error(bot, update, error):
@@ -37,6 +42,7 @@ def error(bot, update, error):
 
 def main():
     """Start the bot."""
+
     # Create the EventHandler and pass it your bot's token.
     updater = Updater(os.getenv('TELEGRAM_BOT_API'))
 
