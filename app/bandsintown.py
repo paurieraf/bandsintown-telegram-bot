@@ -20,11 +20,21 @@ class BandsInTown:
         return self.convert_artist_dict_to_namedtuple(
             self.client.artists(artist_name))
 
-    def fetch_artist_events(self, artist_name):
+    def fetch_artist_events(self, artist_name, country=None):
         """Fetch an artist based on a given name"""
-        print(self.client.artists_events(artist_name))
-        return self.convert_artist_events_dict_to_namedtuple(
-            self.client.artists_events(artist_name))
+
+        if country is None:
+            return self.convert_artist_events_dict_to_namedtuple(
+                self.client.artists_events(artist_name, date="upcoming"))
+
+        artist_events_namedtuple = self.convert_artist_events_dict_to_namedtuple(
+            self.client.artists_events(artist_name, date="upcoming"))
+        artist_events_country_namedtuple = []
+        for artist_event in artist_events_namedtuple:
+            if artist_event.venue.country == country:
+                artist_events_country_namedtuple.append(artist_event)
+
+        return artist_events_country_namedtuple
         # for event in self.client.artists_events(artist_name):
         #     print('----------------------------------------------------------')
         #     print(event)
@@ -49,7 +59,7 @@ class BandsInTown:
             for offer in artist_event['offers']:
                 offers.append(self.Offer(
                     offer['status'], offer['type'], offer['url']))
-            venue = self.Venue(artist_event['venue']['name'], artist_event['venue']['name'], artist_event['venue']
+            venue = self.Venue(artist_event['venue']['name'], artist_event['venue']['country'], artist_event['venue']
                                ['region'], artist_event['venue']['city'], artist_event['venue']['latitude'], artist_event['venue']['longitude'])
             event = self.ArtistEvent(artist_event['id'], artist_event['description'], artist_event['artist_id'], artist_event['datetime'],
                                      artist_lineup, offers, artist_event['on_sale_datetime'], artist_event['url'], venue)

@@ -10,7 +10,7 @@ load_dotenv()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.ERROR)
+                    level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 
@@ -34,9 +34,9 @@ def help(bot, update):
 def echo(bot, update):
     """Echo the user message."""
     #artist_dict = bands_in_town.fetch_artist(update.message.text)
-    artist_event_dict = bands_in_town.fetch_artist_events(update.message.text)
+    #artist_event_dict = bands_in_town.fetch_artist_events(update.message.text)
     # update.message.reply_text(responser.create_artist_response(artist_dict))
-    # update.message.reply_text(update.message.text)
+    update.message.reply_text(update.message.text)
 
 
 def get_artist_info(bot, update, args):
@@ -54,6 +54,19 @@ def get_artist_events(bot, update, args):
         artist_name = artist_name + ' ' + arg
 
     artist_events_list = bands_in_town.fetch_artist_events(artist_name.strip())
+
+    update.message.reply_text(
+        responser.create_artist_events_response(artist_events_list))
+
+
+def get_artist_events_spain(bot, update, args):
+    artist_name = ''
+    for arg in args:
+        artist_name = artist_name + ' ' + arg
+
+    artist_events_list = bands_in_town.fetch_artist_events(
+        artist_name.strip(), country="Spain")
+
     update.message.reply_text(
         responser.create_artist_events_response(artist_events_list))
 
@@ -78,6 +91,8 @@ def main():
     dp.add_handler(CommandHandler("artist", get_artist_info,
                                   pass_args=True))
     dp.add_handler(CommandHandler("events", get_artist_events,
+                                  pass_args=True))
+    dp.add_handler(CommandHandler("events_spain", get_artist_events_spain,
                                   pass_args=True))
 
     # on noncommand i.e message - echo the message on Telegram
