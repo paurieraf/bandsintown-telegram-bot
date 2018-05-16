@@ -1,4 +1,5 @@
 import os
+from telegram import ParseMode
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from dotenv import load_dotenv
 import logging
@@ -55,8 +56,11 @@ def get_artist_events(bot, update, args):
 
     artist_events_list = bands_in_town.fetch_artist_events(artist_name.strip())
 
-    update.message.reply_text(
-        responser.create_artist_events_response(artist_events_list))
+    bot.send_message(chat_id=update.message.chat_id,
+                     text=responser.create_artist_events_response(
+                         artist_events_list),
+                     parse_mode=ParseMode.HTML)
+
 
 
 def get_artist_events_spain(bot, update, args):
@@ -67,8 +71,10 @@ def get_artist_events_spain(bot, update, args):
     artist_events_list = bands_in_town.fetch_artist_events(
         artist_name.strip(), country="Spain")
 
-    update.message.reply_text(
-        responser.create_artist_events_response(artist_events_list))
+    bot.send_message(chat_id=update.message.chat_id,
+                     text=responser.create_artist_events_response(
+                         artist_events_list),
+                     parse_mode=ParseMode.HTML)
 
 
 def error(bot, update, error):

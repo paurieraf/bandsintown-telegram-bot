@@ -14,27 +14,30 @@ def create_artist_events_response(artist_events):
     for artist_event in artist_events:
         event_datetime = datetime.strptime(
             artist_event.datetime, '%Y-%m-%dT%H:%M:%S')
+        event_datetime_string = event_datetime.strftime('%d-%m-%Y %H:%M')
 
         # .strftime("%Y-%m-%d %H:%M")
         if country != artist_event.venue.country:
-            response = response + '\n' + '- ' + artist_event.venue.country
+            response = response + '\n\n' + '🌍 <b>' + artist_event.venue.country + '</b>'
             country = artist_event.venue.country
 
         response = response + '\n' + \
-            '{}@{}, {} {}'.format(event_datetime,
-                                  artist_event.venue.name, artist_event.venue.city, artist_event.venue.region)
+            '🕓 {} \n @ {}, {} {}'.format(event_datetime_string,
+                                         artist_event.venue.name, artist_event.venue.city, artist_event.venue.region)
 
         if len(artist_event.description) > 0:
-            response = response + '\n       ' + artist_event.description
+            response = response + '\n' + artist_event.description
 
-        response = response + '\n       INFO:' + artist_event.url
+        response = response + '\nℹ INFO: ' + artist_event.url
 
         if len(artist_event.on_sale_datetime) > 0:
             tickets_available_at_datetime = datetime.strptime(
                 artist_event.on_sale_datetime, '%Y-%m-%dT%H:%M:%S')
-            response = response + '\n    Tickets available:' + \
-                tickets_available_at_datetime
+            tickets_available_at_datetime_string = tickets_available_at_datetime.strftime(
+                '%d-%m-%Y %H:%M')
+            response = response + '\n    Tickets available: ' + \
+                tickets_available_at_datetime_string
 
-        response = response + '\n\n'
+        response = response + '\n'
 
     return response
