@@ -46,8 +46,11 @@ def get_artist_info(bot, update, args):
         artist_name = artist_name + ' ' + arg
 
     artist_dict = bands_in_town.fetch_artist(artist_name.strip())
-    update.message.reply_text(responser.create_artist_response(artist_dict))
 
+    bot.send_message(chat_id=update.message.chat_id,
+                     text=responser.create_artist_response(artist_dict),
+                     parse_mode=ParseMode.HTML)
+                     
 
 def get_artist_events(bot, update, args):
     artist_name = ''
@@ -60,7 +63,6 @@ def get_artist_events(bot, update, args):
                      text=responser.create_artist_events_response(
                          artist_events_list),
                      parse_mode=ParseMode.HTML)
-
 
 
 def get_artist_events_spain(bot, update, args):
