@@ -43,15 +43,19 @@ def get_artist_info(bot, update, args):
     artist_name = ''
     for arg in args:
         artist_name = artist_name + ' ' + arg
-    update.message.reply_text(artist_name)
-    artist_dict = bands_in_town.fetch_artist(update.message.text)
+
+    artist_dict = bands_in_town.fetch_artist(artist_name.strip())
     update.message.reply_text(responser.create_artist_response(artist_dict))
 
 
 def get_artist_events(bot, update, args):
-    # artist_dict = bands_in_town.fetch_artist(update.message.text)
-    # update.message.reply_text(responser.create_artist_response(artist_dict))
-    update.message.reply_text("TODO")
+    artist_name = ''
+    for arg in args:
+        artist_name = artist_name + ' ' + arg
+
+    artist_events_list = bands_in_town.fetch_artist_events(artist_name.strip())
+    update.message.reply_text(
+        responser.create_artist_events_response(artist_events_list))
 
 
 def error(bot, update, error):
@@ -73,11 +77,11 @@ def main():
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("artist", get_artist_info,
                                   pass_args=True))
-    dp.add_handler(CommandHandler("event", get_artist_events,
+    dp.add_handler(CommandHandler("events", get_artist_events,
                                   pass_args=True))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    #dp.add_handler(MessageHandler(Filters.text, echo))
 
     # log all errors
     dp.add_error_handler(error)

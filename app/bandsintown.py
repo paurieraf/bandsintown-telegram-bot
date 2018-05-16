@@ -17,16 +17,14 @@ class BandsInTown:
 
     def fetch_artist(self, artist_name):
         """Fetch an artist based on a given name"""
-
-        print('FETCH_ARTIST', self.convert_artist_dict_to_namedtuple(
-            self.client.artists(artist_name)))
         return self.convert_artist_dict_to_namedtuple(
             self.client.artists(artist_name))
 
     def fetch_artist_events(self, artist_name):
         """Fetch an artist based on a given name"""
-        print('FETCH_ARTIST_EVENT', self.convert_artist_event_dict_to_namedtuple(
-            self.client.artists_events(artist_name)))
+        print(self.client.artists_events(artist_name))
+        return self.convert_artist_events_dict_to_namedtuple(
+            self.client.artists_events(artist_name))
         # for event in self.client.artists_events(artist_name):
         #     print('----------------------------------------------------------')
         #     print(event)
@@ -34,13 +32,16 @@ class BandsInTown:
         # return self.client.artists_events(artist_name)
 
     def convert_artist_dict_to_namedtuple(self, artist_dict):
+        print('CONVERT_ARTIST_DICT_TO_NAMEDTUPLE_ARTIST_DICT', artist_dict)
         artist = self.Artist(artist_dict['id'], artist_dict['name'], artist_dict['url'], artist_dict['facebook_page_url'],
                              artist_dict['upcoming_event_count'], artist_dict['tracker_count'], artist_dict['mbid'], artist_dict['image_url'], artist_dict['thumb_url'])
         return artist
 
-    def convert_artist_event_dict_to_namedtuple(self, artist_event_dict):
+    def convert_artist_events_dict_to_namedtuple(self, artist_events_dict):
+        print('CONVERT_ARTIST_EVENTS_DICT_TO_NAMEDTUPLE_ARTIST_EVENTS_DICT',
+              artist_events_dict)
         artist_events = []
-        for artist_event in artist_event_dict:
+        for artist_event in artist_events_dict:
             artist_lineup = []
             offers = []
             for artist in artist_event['lineup']:
