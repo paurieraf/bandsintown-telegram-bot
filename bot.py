@@ -4,19 +4,21 @@ from dotenv import load_dotenv
 import logging
 
 from app.bandsintown import BandsInTown
+import app.responser as responser
 
 load_dotenv()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
+                    level=logging.ERROR)
 
 logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 
-bands_in_town = BandsInTown();
+bands_in_town = BandsInTown()
+#responser = Responser()
 
 
 def start(bot, update):
@@ -31,8 +33,25 @@ def help(bot, update):
 
 def echo(bot, update):
     """Echo the user message."""
-    update.message.reply_text(bands_in_town.fetch_artist('test'))
-    #update.message.reply_text(update.message.text)
+    #artist_dict = bands_in_town.fetch_artist(update.message.text)
+    artist_event_dict = bands_in_town.fetch_artist_events(update.message.text)
+    # update.message.reply_text(responser.create_artist_response(artist_dict))
+    # update.message.reply_text(update.message.text)
+
+
+def get_artist_info(bot, update, args):
+    artist_name = ''
+    for arg in args:
+        artist_name = artist_name + ' ' + arg
+    update.message.reply_text(artist_name)
+    artist_dict = bands_in_town.fetch_artist(update.message.text)
+    update.message.reply_text(responser.create_artist_response(artist_dict))
+
+
+def get_artist_events(bot, update, args):
+    # artist_dict = bands_in_town.fetch_artist(update.message.text)
+    # update.message.reply_text(responser.create_artist_response(artist_dict))
+    update.message.reply_text("TODO")
 
 
 def error(bot, update, error):
@@ -52,6 +71,10 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("artist", get_artist_info,
+                                  pass_args=True))
+    dp.add_handler(CommandHandler("event", get_artist_events,
+                                  pass_args=True))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
