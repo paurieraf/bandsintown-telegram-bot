@@ -7,10 +7,14 @@ def create_artist_response(artist):
     return response
 
 
-def create_artist_events_response(artist_events):
+def create_artist_events_response(artist_events, artist_name):
     print('CREATE_ARTIST_EVENTS_RESPONSE', str(artist_events))
     response = ''
     country = ''
+
+    if len(artist_events) == 0:
+        return '❌ There are not upcoming events of <b>' + artist_name +'</b>'
+
     for artist_event in artist_events:
         event_datetime = datetime.strptime(
             artist_event.datetime, '%Y-%m-%dT%H:%M:%S')

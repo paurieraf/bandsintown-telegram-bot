@@ -44,24 +44,26 @@ def get_artist_info(bot, update, args):
     artist_name = ''
     for arg in args:
         artist_name = artist_name + ' ' + arg
+    artist_name = artist_name.strip()
 
-    artist_dict = bands_in_town.fetch_artist(artist_name.strip())
+    artist_dict = bands_in_town.fetch_artist(artist_name)
 
     bot.send_message(chat_id=update.message.chat_id,
                      text=responser.create_artist_response(artist_dict),
                      parse_mode=ParseMode.HTML)
-                     
+
 
 def get_artist_events(bot, update, args):
     artist_name = ''
     for arg in args:
         artist_name = artist_name + ' ' + arg
+    artist_name = artist_name.strip()
 
-    artist_events_list = bands_in_town.fetch_artist_events(artist_name.strip())
+    artist_events_list = bands_in_town.fetch_artist_events(artist_name)
 
     bot.send_message(chat_id=update.message.chat_id,
                      text=responser.create_artist_events_response(
-                         artist_events_list),
+                         artist_events_list, artist_name),
                      parse_mode=ParseMode.HTML)
 
 
@@ -69,13 +71,14 @@ def get_artist_events_spain(bot, update, args):
     artist_name = ''
     for arg in args:
         artist_name = artist_name + ' ' + arg
+    artist_name = artist_name.strip()
 
     artist_events_list = bands_in_town.fetch_artist_events(
-        artist_name.strip(), country="Spain")
+        artist_name, country="Spain")
 
     bot.send_message(chat_id=update.message.chat_id,
                      text=responser.create_artist_events_response(
-                         artist_events_list),
+                         artist_events_list, artist_name),
                      parse_mode=ParseMode.HTML)
 
 
