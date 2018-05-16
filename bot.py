@@ -10,7 +10,7 @@ load_dotenv()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
+                    level=logging.ERROR)
 
 logger = logging.getLogger(__name__)
 

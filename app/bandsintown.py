@@ -15,10 +15,12 @@ class BandsInTown:
         self.ArtistEvent = namedtuple(
             'ArtistEvent', ['id', 'description', 'artist_id', 'datetime', 'lineup', 'offers', 'on_sale_datetime', 'url', 'venue'])
 
+
     def fetch_artist(self, artist_name):
         """Fetch an artist based on a given name"""
         return self.convert_artist_dict_to_namedtuple(
             self.client.artists(artist_name))
+
 
     def fetch_artist_events(self, artist_name, country=None):
         """Fetch an artist based on a given name"""
@@ -35,17 +37,13 @@ class BandsInTown:
                 artist_events_country_namedtuple.append(artist_event)
 
         return artist_events_country_namedtuple
-        # for event in self.client.artists_events(artist_name):
-        #     print('----------------------------------------------------------')
-        #     print(event)
-
-        # return self.client.artists_events(artist_name)
 
     def convert_artist_dict_to_namedtuple(self, artist_dict):
         print('CONVERT_ARTIST_DICT_TO_NAMEDTUPLE_ARTIST_DICT', artist_dict)
         artist = self.Artist(artist_dict['id'], artist_dict['name'], artist_dict['url'], artist_dict['facebook_page_url'],
                              artist_dict['upcoming_event_count'], artist_dict['tracker_count'], artist_dict['mbid'], artist_dict['image_url'], artist_dict['thumb_url'])
         return artist
+
 
     def convert_artist_events_dict_to_namedtuple(self, artist_events_dict):
         print('CONVERT_ARTIST_EVENTS_DICT_TO_NAMEDTUPLE_ARTIST_EVENTS_DICT',
