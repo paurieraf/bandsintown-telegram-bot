@@ -85,9 +85,10 @@ def get_artist_events(bot, update, args):
     message = None
     for part in text_parts:
         message = bot.send_message(chat_id=update.message.chat_id,
-        text=part,
-        parse_mode=ParseMode.HTML)
+                                   text=part,
+                                   parse_mode=ParseMode.HTML)
     return message
+
 
 def get_artist_events_spain(bot, update, args):
     artist_name = ''
@@ -98,10 +99,34 @@ def get_artist_events_spain(bot, update, args):
     artist_events_list = bands_in_town.fetch_artist_events(
         artist_name, country="Spain")
 
-    bot.send_message(chat_id=update.message.chat_id,
-                     text=responser.create_artist_events_response(
-                         artist_events_list, artist_name),
-                     parse_mode=ParseMode.HTML)
+    # This is for if the message is too long
+    text = responser.create_artist_events_response(
+        artist_events_list, artist_name)
+
+    if len(text) <= constants.MAX_MESSAGE_LENGTH:
+        return bot.send_message(chat_id=update.message.chat_id,
+                                text=text,
+                                parse_mode=ParseMode.HTML)
+    text_parts = []
+    while len(text) > 0:
+        if len(text) > constants.MAX_MESSAGE_LENGTH:
+            part = text[:constants.MAX_MESSAGE_LENGTH]
+            first_lnbr = part.rfind('\n')
+            if first_lnbr != -1:
+                text_parts.append(part[:first_lnbr])
+                text = text[first_lnbr:]
+            else:
+                text_parts.append(part)
+                text = text[constants.MAX_CAPTION_LENGTH:]
+        else:
+            text_parts.append(text)
+            break
+    message = None
+    for part in text_parts:
+        message = bot.send_message(chat_id=update.message.chat_id,
+                                   text=part,
+                                   parse_mode=ParseMode.HTML)
+    return message
 
 
 def error(bot, update, error):
