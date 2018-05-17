@@ -3,7 +3,11 @@ from datetime import datetime
 
 def create_artist_response(artist):
     print('CREATE_ARTIST_RESPONSE', str(artist))
-    response = '{} - {}'.format(artist.id, artist.name)
+    response = ''
+    response = response + '<b> {} </b> \n'.format(artist.name)
+    response = response + 'Upcoming events: {} \n '.format(artist.upcoming_event_count)
+    response = response + 'ℹ INFO: {}'.format(artist.url)
+     
     return response
 
 
@@ -13,7 +17,7 @@ def create_artist_events_response(artist_events, artist_name):
     country = ''
 
     if len(artist_events) == 0:
-        return '❌ There are not upcoming events of <b>' + artist_name +'</b>'
+        return '❌ There are not upcoming events of <b>' + artist_name + '</b>'
 
     for artist_event in artist_events:
         event_datetime = datetime.strptime(
@@ -29,8 +33,9 @@ def create_artist_events_response(artist_events, artist_name):
             '🕓 {} \n @ {}, {} {}'.format(event_datetime_string,
                                          artist_event.venue.name, artist_event.venue.city, artist_event.venue.region)
 
-        if len(artist_event.description) > 0:
-            response = response + '\n' + artist_event.description
+        # Commented due to the unnecessary text size
+        # if len(artist_event.description) > 0:
+        #     response = response + '\n' + artist_event.description
 
         response = response + '\nℹ INFO: ' + artist_event.url
 
